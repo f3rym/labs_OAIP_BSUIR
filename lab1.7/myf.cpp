@@ -41,7 +41,7 @@ int enterEl()
     return el;
 }
 
-struct cubeProperties *memStruct(int m, int K)
+struct cubeProperties *mem(int m, int K)
 {
     cubeProperties *cube;
     cube = (struct cubeProperties *)calloc(m, sizeof(cubeProperties));
@@ -70,7 +70,7 @@ void enterCubeProperties(cubeProperties *cube, int m, int K)
         printf("\nВведите характеристики куба номер %d:\n", i + 1);
         while (1)
         {
-            printf("Введите длину куба(в см.):\t");
+            printf("\nВведите длину куба(в см.):\t");
             int y = scanf_s("%d", &(cube + i)->size);
             if (CheckElement((cube + i)->size, y))
                 break;
@@ -137,24 +137,34 @@ void BfindSizeCube(cubeProperties *cube, int l)
 {
     int CountWood = 0, CountMetal = 0;
     int n, m;
-    printf("\nВведите длину ребра n деревянного кубика (в см.):\t");
+    printf("\nВведите длину ребра n деревянного кубика (в cm.):\t");
     n = enterEl();
-    printf("\nВведите минимальную длину m ребра металлического кубика (в см.):\t");
+    printf("\nВведите от какой длины m ребра металлического кубика (в cm.):\t");
     m =enterEl();
     for(int i=0;i <l; i++)
     {
         if (strcmp((cube + i)->materials, "wood") == 0 && (cube + i)->size == n)
             CountWood++;
-        else if (strcmp((cube + i)->materials, "metal") == 0 && (cube + i)->size >= m)
+        else if (strcmp((cube + i)->materials, "metal") == 0 && (cube + i)->size > m)
             CountMetal++;
     }
-    printf("\n== Материал == Длина ребра(cm.) ==  Количество  ============================= \n");
+    printf("\n== Материал == Длина ребра(cm.) ==  Количество  ==============================\n");
     printf("| %-10s | %-15d | %-15d |\n", "Wood", n, CountWood);
     printf("| %-10s | >%-14d | %-15d |\n", "Metal", m, CountMetal);
     printf("================================================================================\n");
 }
 
-    int againProg()
+void freeCubeMemory(cubeProperties *cube, int m)
+{
+    for (int i = 0; i < m; i++)
+    {
+        free((cube + i)->color);
+        free((cube + i)->materials);
+    }
+    free(cube);
+}
+
+int againProg()
 {
     int y, again;
     printf("\nХотите попробовать снова? \033[32mДа - 1\033[0m. \033[31mНет - 0 \033[0m:\t");

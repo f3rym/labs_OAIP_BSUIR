@@ -10,16 +10,22 @@ int main()
 {
     setlocale(LC_ALL, "ru_RU.UTF-8");
     int again = 1, m;
+    cubeProperties *cube;
     while (again)
     {
         m = enterM();
-        cubeProperties *cube = memStruct(m, K);
+        cube = mem(m, K);
         enterCubeProperties(cube, m, K);
         printCubeProperties(cube, m);
         AfindVolumeCube(cube, m);
         BfindSizeCube(cube, m);
-        ///////// freeeeeeeeeeeeeeeeeeeeeeeeee
-        free(cube);
+        freeCubeMemory(cube, m);
         again = againProg();
     }
 }
+/*
+Лабораторная работа № 1.7
+Имеются сведения о кубикахЖ размер каждого кубика(длина ребра в сантиметрах), его цвет (красный, желтый, зеленый и синий) и материал(дерево, металл, картон). Найти: 
+а) количество кубиков каждого из перечисленных цветов и их суммарный объем;
+б) количество деревянных кубиков с ребром n сантиметров и количество металлических кубиков с ребром большим m сантиметров.
+*/
