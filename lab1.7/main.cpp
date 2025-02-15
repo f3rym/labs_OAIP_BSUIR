@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <locale.h>
 
+#define K 50
+
 int main()
 {
     setlocale(LC_ALL, "ru_RU.UTF-8");
@@ -12,8 +14,8 @@ int main()
     while(again)
     {
         m = enterM();
-        cubeProperties *cube = createStruct(m);
-        enterCubeProperties(cube, m);
+        cubeProperties *cube = memStruct(m, K);
+        enterCubeProperties(cube, m, K);
         printCubeProperties(cube, m);
         free(cube);
         again = againProg();

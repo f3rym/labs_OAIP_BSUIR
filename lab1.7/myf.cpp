@@ -29,7 +29,7 @@ int enterM()
     return el;
 }
 
-struct cubeProperties *createStruct(int m)
+struct cubeProperties *memStruct(int m, int K)
 {
     cubeProperties *cube;
     cube = (struct cubeProperties *)calloc(m, sizeof(cubeProperties));
@@ -38,29 +38,43 @@ struct cubeProperties *createStruct(int m)
         printf("Память не была выделена :(\n");
         return NULL;
     }
+    for (int i = 0; i < m; i++)
+    {
+        (cube + i)->materials = (char *)calloc(K, sizeof(char));
+        (cube + i)->color = (char *)calloc(K, sizeof(char));
+        if (!(cube + i)->color || !(cube + i)->materials)
+        {
+            printf("Ошибка выделения памяти для строк.\n");
+            return NULL;
+        }
+    }
     return cube;
 }
 
-void enterCubeProperties(cubeProperties *cube, int m)
+void enterCubeProperties(cubeProperties *cube, int m, int K)
 {
     for (int i = 0; i < m; i++)
     {
-        printf("Введите характеристики куба номер %d:\n", i+1);
-        while(1)
+        printf("Введите характеристики куба номер %d:\n", i + 1);
+        while (1)
         {
             printf("Введите длину куба:\t");
             int y = scanf_s("%d", &(cube + i)->size);
             if (CheckElement((cube + i)->size, y))
                 break;
         }
-        printf("Введите цвет кубика или выберете из предложенных:\nкрасный, желтый, зеленый или синий\t");
+        printf("Введите цвет кубика или выберете из предложенных(\033[36mred, yellow, green or blue\033[0m):\t");
         rewind(stdin);
-        fgets((cube+i)->color, sizeof((cube+i)->color), stdin);
-        (cube + i)->color[strcspn((cube + i)->color, "\n")] = '\0';
-        printf("Введите материал кубика или выберете из предложенных:\nдерево, металл или картон\t:\t");
+        fgets((cube + i)->color, K, stdin);
+        for (int k = 0; k < sizeof((cube + i)->color); k++)
+            if (*((cube + i)->color+k) == '\n')
+                *((cube + i)->color+k) = '\0';
+        printf("Введите материал кубика или выберете из предложенных(\033[36mwood, metal or cardboard\033[0m):\t");
         rewind(stdin);
-        fgets((cube + i)->materials, sizeof((cube + i)->materials), stdin);
-        (cube + i)->materials[strcspn((cube + i)->materials, "\n")] = '\0';
+        fgets((cube + i)->materials, K, stdin);
+        for (int k = 0; k < sizeof((cube + i)->materials); k++)
+            if (*((cube + i)->materials + k) == '\n')
+                *((cube + i)->materials + k) = '\0';
     }
 }
 
