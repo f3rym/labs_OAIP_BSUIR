@@ -9,14 +9,16 @@
 int main()
 {
     setlocale(LC_ALL, "ru_RU.UTF-8");
-    int again = 1;
-    int m;
-    while(again)
+    int again = 1, m;
+    while (again)
     {
         m = enterM();
         cubeProperties *cube = memStruct(m, K);
         enterCubeProperties(cube, m, K);
         printCubeProperties(cube, m);
+        AfindVolumeCube(cube, m);
+        BfindSizeCube(cube, m);
+        ///////// freeeeeeeeeeeeeeeeeeeeeeeeee
         free(cube);
         again = againProg();
     }

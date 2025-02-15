@@ -29,6 +29,18 @@ int enterM()
     return el;
 }
 
+int enterEl()
+{
+    int el, y;
+    while (1)
+    {
+        y = scanf_s("%d", &el);
+        if (CheckElement(el, y))
+            break;
+    };
+    return el;
+}
+
 struct cubeProperties *memStruct(int m, int K)
 {
     cubeProperties *cube;
@@ -55,45 +67,94 @@ void enterCubeProperties(cubeProperties *cube, int m, int K)
 {
     for (int i = 0; i < m; i++)
     {
-        printf("Введите характеристики куба номер %d:\n", i + 1);
+        printf("\nВведите характеристики куба номер %d:\n", i + 1);
         while (1)
         {
-            printf("Введите длину куба:\t");
+            printf("Введите длину куба(в см.):\t");
             int y = scanf_s("%d", &(cube + i)->size);
             if (CheckElement((cube + i)->size, y))
                 break;
         }
-        printf("Введите цвет кубика или выберете из предложенных(\033[36mred, yellow, green or blue\033[0m):\t");
+        printf("\nВведите цвет кубика из предложенных(\033[36mred, yellow, green or blue\033[0m):\t");
         rewind(stdin);
         fgets((cube + i)->color, K, stdin);
-        for (int k = 0; k < sizeof((cube + i)->color); k++)
-            if (*((cube + i)->color+k) == '\n')
-                *((cube + i)->color+k) = '\0';
-        printf("Введите материал кубика или выберете из предложенных(\033[36mwood, metal or cardboard\033[0m):\t");
+        for (int k = 0; k < strlen((cube + i)->color); k++)
+            if (*((cube + i)->color + k) == '\n')
+                *((cube + i)->color + k) = '\0';
+        printf("\nВведите материал кубика из предложенных(\033[36mwood, metal or cardboard\033[0m):\t");
         rewind(stdin);
         fgets((cube + i)->materials, K, stdin);
-        for (int k = 0; k < sizeof((cube + i)->materials); k++)
+        for (int k = 0; k < strlen((cube + i)->materials); k++)
             if (*((cube + i)->materials + k) == '\n')
                 *((cube + i)->materials + k) = '\0';
     }
 }
 
-void printCubeProperties(cubeProperties *cube, int m)
+void AfindVolumeCube(cubeProperties *cube, int m)
 {
-    printf("Характеристики кубов:\n");
-    printf("===== № ======== Длинна ребра ============== Цвет ========= Материал ======\n");
+    int CountRed = 0, CountYellow = 0, CountGreen = 0, CountBlue = 0, CountWood = 0, CountMetal = 0;
+    int VolumeRed = 0, VolumeYellow = 0, VolumeGreen = 0, VolumeBlue = 0;
     for (int i = 0; i < m; i++)
     {
-        printf("|     %-2d     |     %-10d     | %-15s | %-15s |\n",
-               i + 1,                  // Номер куба
-               (cube + i)->size,       // Длина ребра
-               (cube + i)->color,      // Цвет
-               (cube + i)->materials); // Материал
+        if (strcmp((cube + i)->color, "red") == 0)
+        {
+            CountRed++;
+            VolumeRed += (cube + i)->size * (cube + i)->size * (cube + i)->size;
+        }
+        else if (strcmp((cube + i)->color, "yellow") == 0)
+        {
+            CountYellow++;
+            VolumeYellow += (cube + i)->size * (cube + i)->size * (cube + i)->size;
+        }
+        else if (strcmp((cube + i)->color, "green") == 0)
+        {
+            CountGreen++;
+            VolumeGreen += (cube + i)->size * (cube + i)->size * (cube + i)->size;
+        }
+        else
+        {
+            CountBlue++;
+            VolumeBlue += (cube + i)->size * (cube + i)->size * (cube + i)->size;
+        }
     }
-    printf("===========================================================================\n");
+    printf("=== Цвет ======= Объем(cm^3.) ====  Количество  ===============================\n");
+    printf("| %-10s | %-15d | %-15d |\n", "Red", VolumeRed, CountRed);
+    printf("| %-10s | %-15d | %-15d |\n", "Yellow", VolumeYellow, CountYellow);
+    printf("| %-10s | %-15d | %-15d |\n", "Green", VolumeGreen, CountGreen);
+    printf("| %-10s | %-15d | %-15d |\n", "Blue", VolumeBlue, CountBlue);
+    printf("================================================================================\n");
 }
 
-int againProg()
+void printCubeProperties(cubeProperties *cube, int m)
+{
+    printf("\nХарактеристики кубов:\n");
+    printf("\n===== № ====== Длинна ребра(cm.) ======== Цвет ========= Материал ==============\n");
+    for (int i = 0; i < m; i++)
+        printf("|     %-2d     |     %-10d     | %-15s | %-15s |\n", i + 1, (cube + i)->size, (cube + i)->color, (cube + i)->materials); 
+}
+
+void BfindSizeCube(cubeProperties *cube, int l)
+{
+    int CountWood = 0, CountMetal = 0;
+    int n, m;
+    printf("\nВведите длину ребра n деревянного кубика (в см.):\t");
+    n = enterEl();
+    printf("\nВведите минимальную длину m ребра металлического кубика (в см.):\t");
+    m =enterEl();
+    for(int i=0;i <l; i++)
+    {
+        if (strcmp((cube + i)->materials, "wood") == 0 && (cube + i)->size == n)
+            CountWood++;
+        else if (strcmp((cube + i)->materials, "metal") == 0 && (cube + i)->size >= m)
+            CountMetal++;
+    }
+    printf("\n== Материал == Длина ребра(cm.) ==  Количество  ============================= \n");
+    printf("| %-10s | %-15d | %-15d |\n", "Wood", n, CountWood);
+    printf("| %-10s | >%-14d | %-15d |\n", "Metal", m, CountMetal);
+    printf("================================================================================\n");
+}
+
+    int againProg()
 {
     int y, again;
     printf("\nХотите попробовать снова? \033[32mДа - 1\033[0m. \033[31mНет - 0 \033[0m:\t");
