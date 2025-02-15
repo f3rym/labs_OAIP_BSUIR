@@ -3,15 +3,15 @@
 struct cubeProperties
 {
     int size;
-    char color[20];
-    char materials[20];
+    char* color;
+    char* materials;
 };
 
 int enterM();
 
-struct cubeProperties *createStruct(int m);
+struct cubeProperties *memStruct(int m, int K);
 
-void enterCubeProperties(cubeProperties *cube, int m);
+void enterCubeProperties(cubeProperties *cube, int m, int K);
 
 void printCubeProperties(cubeProperties *cube, int m);
 
