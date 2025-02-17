@@ -192,8 +192,8 @@ void poisk(cubeProperties *cube, int m, int K, int n)
         if ((cube + i)->size == n)
         {
             (poisk + k)->size = (cube + i)->size;
-            (poisk + k)->color = (cube + i)->color;
-            (poisk + k)->materials = (cube + i)->materials;
+            strncpy((poisk + k)->color, (cube + i)->color, K);
+            strncpy((poisk + k)->materials, (cube + i)->materials, K);
             k++;
             CountPoisk++;
         }
@@ -201,10 +201,10 @@ void poisk(cubeProperties *cube, int m, int K, int n)
     poisk = (struct cubePoisk *)realloc(poisk, CountPoisk * sizeof(cubePoisk));
     if (!poisk)
         printf("Ошибка при перезаписи памяти.\n");
-    printf("\nХарактеристики кубов:\n");
     printf("\n===== № ====== Длинна ребра(cm.) ======== Цвет ========= Материал ==============\n");
-    for (int i = 0; i < m; i++)
+    for (int i = 0; i < CountPoisk; i++)
         printf("|     %-2d     |     %-10d     | %-15s | %-15s |\n", i + 1, (poisk + i)->size, (poisk + i)->color, (poisk + i)->materials);
+    printf("==================================================================================\n");
     for (int i = 0; i < CountPoisk; i++)
     {
         free((poisk + i)->color);
