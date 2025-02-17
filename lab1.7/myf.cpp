@@ -29,6 +29,19 @@ int enterM()
     return el;
 }
 
+int enterN()
+{
+    int el, y;
+    while (1)
+    {
+        printf("Введите длину ребра куба, которую мы ищем:\t");
+        y = scanf_s("%d", &el);
+        if (CheckElement(el, y))
+            break;
+    };
+    return el;
+}
+
 int enterEl()
 {
     int el, y;
@@ -130,7 +143,7 @@ void printCubeProperties(cubeProperties *cube, int m)
     printf("\nХарактеристики кубов:\n");
     printf("\n===== № ====== Длинна ребра(cm.) ======== Цвет ========= Материал ==============\n");
     for (int i = 0; i < m; i++)
-        printf("|     %-2d     |     %-10d     | %-15s | %-15s |\n", i + 1, (cube + i)->size, (cube + i)->color, (cube + i)->materials); 
+        printf("|     %-2d     |     %-10d     | %-15s | %-15s |\n", i + 1, (cube + i)->size, (cube + i)->color, (cube + i)->materials);
 }
 
 void BfindSizeCube(cubeProperties *cube, int l)
@@ -140,8 +153,8 @@ void BfindSizeCube(cubeProperties *cube, int l)
     printf("\nВведите длину ребра n деревянного кубика (в cm.):\t");
     n = enterEl();
     printf("\nВведите от какой длины m ребра металлического кубика (в cm.):\t");
-    m =enterEl();
-    for(int i=0;i <l; i++)
+    m = enterEl();
+    for (int i = 0; i < l; i++)
     {
         if (strcmp((cube + i)->materials, "wood") == 0 && (cube + i)->size == n)
             CountWood++;
@@ -152,6 +165,52 @@ void BfindSizeCube(cubeProperties *cube, int l)
     printf("| %-10s | %-15d | %-15d |\n", "Wood", n, CountWood);
     printf("| %-10s | >%-14d | %-15d |\n", "Metal", m, CountMetal);
     printf("================================================================================\n");
+}
+
+void poisk(cubeProperties *cube, int m, int K, int n)
+{
+    // Выделение памяти под новую структуру
+    cubePoisk *poisk;
+    int CountPoisk = 0, k = 0;
+    poisk = (struct cubePoisk *)calloc(m, sizeof(cubePoisk));
+    if (!poisk)
+    {
+        printf("Память не была выделена :(\n");
+    }
+    for (int i = 0; i < m; i++)
+    {
+        (poisk + i)->materials = (char *)calloc(K, sizeof(char));
+        (poisk + i)->color = (char *)calloc(K, sizeof(char));
+        if (!(poisk + i)->color || !(poisk + i)->materials)
+        {
+            printf("Ошибка выделения памяти для строк.\n");
+        }
+    }
+    // Заполняем структуру
+    for (int i = 0; i < m; i++)
+    {
+        if ((cube + i)->size == n)
+        {
+            (poisk + k)->size = (cube + i)->size;
+            (poisk + k)->color = (cube + i)->color;
+            (poisk + k)->materials = (cube + i)->materials;
+            k++;
+            CountPoisk++;
+        }
+    }
+    poisk = (struct cubePoisk *)realloc(poisk, CountPoisk * sizeof(cubePoisk));
+    if (!poisk)
+        printf("Ошибка при перезаписи памяти.\n");
+    printf("\nХарактеристики кубов:\n");
+    printf("\n===== № ====== Длинна ребра(cm.) ======== Цвет ========= Материал ==============\n");
+    for (int i = 0; i < m; i++)
+        printf("|     %-2d     |     %-10d     | %-15s | %-15s |\n", i + 1, (poisk + i)->size, (poisk + i)->color, (poisk + i)->materials);
+    for (int i = 0; i < CountPoisk; i++)
+    {
+        free((poisk + i)->color);
+        free((poisk + i)->materials);
+    }
+    free(poisk);
 }
 
 void freeCubeMemory(cubeProperties *cube, int m)
