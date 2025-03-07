@@ -1,8 +1,5 @@
 #include "header.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 int CheckElement(int a, int y)
 {
@@ -103,39 +100,47 @@ void enterCubeProperties(cubeProperties *cube, int m, int K)
     }
 }
 
+void printFindVolumeCube(int* colorCount, int* volumeCount)
+{
+    printf("=== Цвет ======= Объем(cm^3.) ====  Количество  ===============================\n");
+    printf("| %-10s | %-15d | %-15d |\n", "red", *volumeCount, *colorCount);
+    printf("| %-10s | %-15d | %-15d |\n", "yellow", *(volumeCount + 1), *(colorCount + 1));
+    printf("| %-10s | %-15d | %-15d |\n", "green", *(volumeCount + 2), *(colorCount + 2));
+    printf("| %-10s | %-15d | %-15d |\n", "blue", *(volumeCount + 3), *(colorCount + 3));
+    printf("================================================================================\n");
+}
+
 void AfindVolumeCube(cubeProperties *cube, int m)
 {
-    int CountRed = 0, CountYellow = 0, CountGreen = 0, CountBlue = 0, CountWood = 0, CountMetal = 0;
-    int VolumeRed = 0, VolumeYellow = 0, VolumeGreen = 0, VolumeBlue = 0;
+    int* colorCount, *volumeCount;
+    colorCount = (int *)calloc(4, sizeof(int));
+    volumeCount = (int *)calloc(4, sizeof(int));
     for (int i = 0; i < m; i++)
     {
         if (strcmp((cube + i)->color, "red") == 0)
         {
-            CountRed++;
-            VolumeRed += (cube + i)->size * (cube + i)->size * (cube + i)->size;
+            (*colorCount)++;
+            *volumeCount += (cube + i)->size * (cube + i)->size * (cube + i)->size;
         }
         else if (strcmp((cube + i)->color, "yellow") == 0)
         {
-            CountYellow++;
-            VolumeYellow += (cube + i)->size * (cube + i)->size * (cube + i)->size;
+            (*(colorCount + 1))++;
+            *(volumeCount + 1) += (cube + i)->size * (cube + i)->size * (cube + i)->size;
         }
         else if (strcmp((cube + i)->color, "green") == 0)
         {
-            CountGreen++;
-            VolumeGreen += (cube + i)->size * (cube + i)->size * (cube + i)->size;
+            (*(colorCount + 2))++;
+            *(volumeCount + 2) += (cube + i)->size * (cube + i)->size * (cube + i)->size;
         }
-        else
+        else if (strcmp((cube + i)->color, "blue") == 0)
         {
-            CountBlue++;
-            VolumeBlue += (cube + i)->size * (cube + i)->size * (cube + i)->size;
+            (*(colorCount + 3))++;
+            *(volumeCount + 3) += (cube + i)->size * (cube + i)->size * (cube + i)->size;
         }
     }
-    printf("=== Цвет ======= Объем(cm^3.) ====  Количество  ===============================\n");
-    printf("| %-10s | %-15d | %-15d |\n", "Red", VolumeRed, CountRed);
-    printf("| %-10s | %-15d | %-15d |\n", "Yellow", VolumeYellow, CountYellow);
-    printf("| %-10s | %-15d | %-15d |\n", "Green", VolumeGreen, CountGreen);
-    printf("| %-10s | %-15d | %-15d |\n", "Blue", VolumeBlue, CountBlue);
-    printf("================================================================================\n");
+    printFindVolumeCube(colorCount, volumeCount);
+    free(colorCount);
+    free(volumeCount);
 }
 
 void printCubeProperties(cubeProperties *cube, int m)
@@ -146,9 +151,17 @@ void printCubeProperties(cubeProperties *cube, int m)
         printf("|     %-2d     |     %-10d     | %-15s | %-15s |\n", i + 1, (cube + i)->size, (cube + i)->color, (cube + i)->materials);
 }
 
+void printFindSizeCube(int n, int m, int countWood, int countMetal)
+{
+    printf("\n== Материал == Длина ребра(cm.) ==  Количество  ==============================\n");
+    printf("| %-10s | %-15d | %-15d |\n", "wood", n, countWood);
+    printf("| %-10s | >%-14d | %-15d |\n", "metal", m, countMetal);
+    printf("================================================================================\n");
+}
+
 void BfindSizeCube(cubeProperties *cube, int l)
 {
-    int CountWood = 0, CountMetal = 0;
+    int countWood = 0, countMetal = 0;
     int n, m;
     printf("\nВведите длину ребра n деревянного кубика (в cm.):\t");
     n = enterEl();
@@ -157,21 +170,25 @@ void BfindSizeCube(cubeProperties *cube, int l)
     for (int i = 0; i < l; i++)
     {
         if (strcmp((cube + i)->materials, "wood") == 0 && (cube + i)->size == n)
-            CountWood++;
+            countWood++;
         else if (strcmp((cube + i)->materials, "metal") == 0 && (cube + i)->size > m)
-            CountMetal++;
+            countMetal++;
     }
-    printf("\n== Материал == Длина ребра(cm.) ==  Количество  ==============================\n");
-    printf("| %-10s | %-15d | %-15d |\n", "Wood", n, CountWood);
-    printf("| %-10s | >%-14d | %-15d |\n", "Metal", m, CountMetal);
-    printf("================================================================================\n");
+    printFindSizeCube(n, m, countWood, countMetal);
+}
+void printPoisk(cubePoisk *poisk, int countPoisk)
+{
+    printf("\n===== № ====== Длинна ребра(cm.) ======== Цвет ========= Материал ==============\n");
+    for (int i = 0; i < countPoisk; i++)
+        printf("|     %-2d     |     %-10d     | %-15s | %-15s |\n", i + 1, (poisk + i)->size, (poisk + i)->color, (poisk + i)->materials);
+    printf("==================================================================================\n");
 }
 
 void poisk(cubeProperties *cube, int m, int K, int n)
 {
     // Выделение памяти под новую структуру
     cubePoisk *poisk;
-    int CountPoisk = 0, k = 0;
+    int countPoisk = 0, k = 0;
     poisk = (struct cubePoisk *)calloc(m, sizeof(cubePoisk));
     if (!poisk)
     {
@@ -195,17 +212,14 @@ void poisk(cubeProperties *cube, int m, int K, int n)
             strncpy((poisk + k)->color, (cube + i)->color, K);
             strncpy((poisk + k)->materials, (cube + i)->materials, K);
             k++;
-            CountPoisk++;
+            countPoisk++;
         }
     }
-    poisk = (struct cubePoisk *)realloc(poisk, CountPoisk * sizeof(cubePoisk));
+    poisk = (struct cubePoisk *)realloc(poisk, countPoisk * sizeof(cubePoisk));
     if (!poisk)
         printf("Ошибка при перезаписи памяти.\n");
-    printf("\n===== № ====== Длинна ребра(cm.) ======== Цвет ========= Материал ==============\n");
-    for (int i = 0; i < CountPoisk; i++)
-        printf("|     %-2d     |     %-10d     | %-15s | %-15s |\n", i + 1, (poisk + i)->size, (poisk + i)->color, (poisk + i)->materials);
-    printf("==================================================================================\n");
-    for (int i = 0; i < CountPoisk; i++)
+    printPoisk(poisk, countPoisk);
+    for (int i = 0; i < countPoisk; i++)
     {
         free((poisk + i)->color);
         free((poisk + i)->materials);
