@@ -71,14 +71,14 @@ int findUser(char **usersList, int *usersCount, char *login, char *password)
     return -1;
 }
 
-void saveDbInFile(database *db)
+void saveDbInFile(blockbase *db)
 {
     FILE *file;
     file = fopen("structbase.fesql", "a");
     if (file == NULL)
         printf("Не удалось открыть файл для записи.\n");
     else
-        fprintf(file, "DATABASE %s\n", db->nameDb);
+        fprintf(file, "blockbase %s\n", db->nameDb);
     fclose(file);
 }
 
@@ -246,14 +246,14 @@ table *mem(char *tableName, char *columns, int isLoad)
     return def;
 }
 
-database *createDB(char *databaseName, int isLoaded)
+blockbase *createDB(char *blockbaseName, int isLoaded)
 {
-    database *initDb = (database *)malloc(sizeof(database));
+    blockbase *initDb = (blockbase *)malloc(sizeof(blockbase));
     if (!initDb)
         return NULL;
     initDb->tableCount = 0;
     initDb->nameDb = (char *)malloc(MaxStringSize * sizeof(char));
-    strcpy(initDb->nameDb, databaseName);
+    strcpy(initDb->nameDb, blockbaseName);
     if (isLoaded == 0)
     {
         saveDbInFile(initDb);
@@ -262,7 +262,7 @@ database *createDB(char *databaseName, int isLoaded)
     return initDb;
 }
 
-database *loadDbInFile(database *db)
+blockbase *loadDbInFile(blockbase *db)
 {
     int isLoad = 1;
     FILE *file;
@@ -273,14 +273,14 @@ database *loadDbInFile(database *db)
         line = (char *)malloc(MaxStringSize * sizeof(char));
         while (fgets(line, MaxStringSize, file))
         {
-            if (strncmp(line, "DATABASE", 8) == 0 && db == NULL)
+            if (strncmp(line, "blockbase", 8) == 0 && db == NULL)
             {
-                char *databaseName;
-                databaseName = (char *)malloc(MaxStringSize * sizeof(char));
-                sscanf(line, "DATABASE %s", databaseName);
-                databaseName[strcspn(databaseName, "\n")] = '\0';
-                db = createDB(databaseName, isLoad);
-                free(databaseName);
+                char *blockbaseName;
+                blockbaseName = (char *)malloc(MaxStringSize * sizeof(char));
+                sscanf(line, "blockbase %s", blockbaseName);
+                blockbaseName[strcspn(blockbaseName, "\n")] = '\0';
+                db = createDB(blockbaseName, isLoad);
+                free(blockbaseName);
             }
             else if (strncmp(line, "TABLE", 5) == 0)
             {
@@ -327,7 +327,7 @@ database *loadDbInFile(database *db)
     return db;
 }
 
-void ls(database *db)
+void ls(blockbase *db)
 {
     if (db != NULL)
     {
@@ -354,7 +354,7 @@ void ls(database *db)
     printf("\033[1;36m============================================================\033[0m\n");
 }
 
-void enterStruct(database *db)
+void enterStruct(blockbase *db)
 {
     /*while (1)
     {
@@ -389,7 +389,7 @@ void enterStruct(database *db)
         }
 }
 
-void printStruct(database *db, int position)
+void printStruct(blockbase *db, int position)
 {
     printf("\033[1;36m=====================================================================\033[0m\n");
     printf("\033[1;32m  Таблица: \033[1;34m%s\033[0m\n", db->tables[position]->nameTb);
@@ -423,7 +423,7 @@ void printStruct(database *db, int position)
     printf("\033[1;36m=====================================================================\033[0m\n");
 }
 
-void databaseControl(database *db, char *user)
+void blockbaseControl(blockbase *db, char *user)
 {
     while (1)
     {
@@ -580,7 +580,7 @@ char *login(char **usersList)
     }
 }
 
-void start(database *db, char *user)
+void start(blockbase *db, char *user)
 {
     while (1)
     {
@@ -588,28 +588,28 @@ void start(database *db, char *user)
         printf("\033[1;33m%s\033[1;37m$ \033[0m", user);
         fgets(command, MaxStringSize, stdin);
         command[strcspn(command, "\n")] = '\0';
-        if (strncmp(command, "CREATE DATABASE", 15) == 0)
+        if (strncmp(command, "CREATE blockbase", 15) == 0)
         {
             int isLoad = 0;
-            char *databaseName;
-            databaseName = (char *)malloc(MaxStringSize * sizeof(char));
-            sscanf(command, "CREATE DATABASE %s", databaseName);
-            databaseName[strcspn(databaseName, "\n")] = '\0';
-            db = createDB(databaseName, isLoad);
-            free(databaseName);
+            char *blockbaseName;
+            blockbaseName = (char *)malloc(MaxStringSize * sizeof(char));
+            sscanf(command, "CREATE blockbase %s", blockbaseName);
+            blockbaseName[strcspn(blockbaseName, "\n")] = '\0';
+            db = createDB(blockbaseName, isLoad);
+            free(blockbaseName);
         }
         else if (strncmp(command, "cd", 2) == 0)
         {
-            char *databaseName1;
-            databaseName1 = (char *)malloc(MaxStringSize * sizeof(char));
-            int y = sscanf(command, "cd %s", databaseName1);
+            char *blockbaseName1;
+            blockbaseName1 = (char *)malloc(MaxStringSize * sizeof(char));
+            int y = sscanf(command, "cd %s", blockbaseName1);
             if (y == 1)
             {
-                databaseName1[strcspn(databaseName1, "\n")] = '\0';
+                blockbaseName1[strcspn(blockbaseName1, "\n")] = '\0';
                 if (db != NULL)
                 {
-                    if (strcmp(db->nameDb, databaseName1) == 0)
-                        databaseControl(db, user);
+                    if (strcmp(db->nameDb, blockbaseName1) == 0)
+                        blockbaseControl(db, user);
                     else
                         printf("\033[1;31m:( Данной базы данных не существует.\033[0m\n");
                 }
@@ -618,7 +618,7 @@ void start(database *db, char *user)
             }
             else
                 printf("\033[1;31m:( Нет созданных баз данных.\033[0m\n");
-            free(databaseName1);
+            free(blockbaseName1);
         }
         // Разработать менеджер для структур данных
         else if (strncmp(command, "ls", 2) == 0)
@@ -626,7 +626,7 @@ void start(database *db, char *user)
         else if (strcmp(command, "/help") == 0)
         {
             printf("\033[1;34mСписок возможных команд:\033[0m\n");
-            printf("\033[1;32m1. CREATE DATABASE \033[1;35mname\033[0m\n");
+            printf("\033[1;32m1. CREATE blockbase \033[1;35mname\033[0m\n");
             printf("   \033[1;33m- Описание:\033[0m Создает новую базу данных с заданным именем.\n");
             printf("\033[1;32m2. cd \033[1;35mname\033[0m\n");
             printf("   \033[1;33m- Описание:\033[0m Вход в базу данных с заданным именем.\n");

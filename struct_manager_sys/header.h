@@ -8,7 +8,7 @@
 
 #define MaxStringSize 200 // Максимальная длинна строки
 #define DefMaxRow 10      // Максимальное количество строк по умолчанию
-#define DefMaxColumns 5  // Максимальное количество полей по умолчанию
+#define DefMaxColumns 5   // Максимальное количество полей по умолчанию
 #define MaxTables 10      // Максимальное количество таблиц
 struct table
 {
@@ -19,7 +19,7 @@ struct table
     int rowCount;
     int maxRow;
 };
-struct database
+struct blockbase
 {
     table *tables[MaxTables];
     int tableCount;
@@ -27,18 +27,18 @@ struct database
     int dbCount;
 };
 
-char *login(char** usersList);
+char *login(char **usersList);
 
-void start(database *db, char* user);
+void start(blockbase *db, char *user);
 
 int enterEl();
 
-database *loadDbInFile(database *db);
+blockbase *loadDbInFile(blockbase *db);
 
 table *mem(char *tableName, char *columns, int isLoad);
 
-void enterStruct(database *db);
+void enterStruct(blockbase *db);
 
-void printStruct(database *db, int position);
+void printStruct(blockbase *db, int position);
 
 int againProg();
