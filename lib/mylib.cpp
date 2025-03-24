@@ -1,8 +1,8 @@
-#include <header.h>
+#include "header.h"
 
 int CheckElement(int a, int y)
 {
-    if (y != 1 || a <= 0 || a >= INT_MAX)
+    if (y != 1 || a <= -1 || a >= INT_MAX)
     {
         printf("\n\033[31mОшибка. Введено не число или оно > %d. Попробуй снова.\033[0m\n\n", INT_MAX);
         rewind(stdin);
