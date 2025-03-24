@@ -19,9 +19,8 @@ int main()
             type = enterEl();
             funcPtr(students, m, type);
         }    
-        freeMemory(students, m);       
+        freeMemory(students, m);
         again = againProg();
     }
-
     return 0;
 }
