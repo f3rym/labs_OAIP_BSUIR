@@ -66,7 +66,7 @@ struct infoStudent* mem(int m);
 
 void enterStudentsAddress(infoStudent *students, int m);
 
-void printStudentsAddress(infoStudent *students, int m, int type);
+void cyclePrintStudentsAddress(infoStudent *students, int type, int m);
 
 void freeMemory(infoStudent *students, int m);
 
