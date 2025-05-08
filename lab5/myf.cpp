@@ -82,11 +82,16 @@ struct Tree *deleteNode(Tree *root, int value)
     return root;
 }
 
+
+
 void Order1(Tree *root)
 {
+    int array[K], index = 0;
     if (root != NULL)
     {
-        printf("%d ", root->key);
+        array[index] = root->key;
+        printf("%d ", array[index]);
+        index++;
         Order1(root->left);
         Order1(root->right);
     }
@@ -94,22 +99,27 @@ void Order1(Tree *root)
 
 void Order2(Tree *root)
 {
+    int array[K], index = 0;
     if (root != NULL)
     {
-        Order1(root->left);
-        printf("%d ", root->key);
-        Order1(root->right);
+        Order2(root->left);
+        array[index] = root->key;
+        printf("%d ", array[index]);
+        index++;
+        Order2(root->right);
     }
 }
 
 void Order3(Tree *root)
 {
+    int array[K], index = 0;
     if (root != NULL)
     {
-        Order1(root->left);
-        Order1(root->right);
-
-        printf("%d ", root->key);
+        Order3(root->left);
+        Order3(root->right);
+        array[index] = root->key;
+        printf("%d ", array[index]);
+        index++;
     }
 }
 

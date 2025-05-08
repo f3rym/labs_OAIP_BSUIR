@@ -5,6 +5,7 @@
 #include <string.h>
 #include <locale.h>
 
+#define K 80
 struct Tree
 {
     int key;
