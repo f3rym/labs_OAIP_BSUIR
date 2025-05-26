@@ -30,7 +30,7 @@ int removeCar(linkedList *list, char *carNumber)
     if (list->head == NULL)
         return 0;
     Node *current = list->head;
-    while (current)
+    while (current == NULL)
     {
         if (strcmp(current->carNumber, carNumber) == 0)
         {
@@ -293,11 +293,10 @@ void managerInfoCars(infoParking **parking, int *countParkingLot)
 
 void freeLinkedList(linkedList *list)
 {
-    Node *curr = list->head;
-    while (curr != NULL)
+    while (list->head != NULL)
     {
-        Node *temp = curr;
-        curr = curr->next;
+        Node *temp = list->head;
+        list->head = list->head->next;
         free(temp);
     }
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include  <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
@@ -62,7 +62,7 @@ struct infoStudentPoisk
 
 int enterEl();
 
-struct infoStudent* mem(int m);
+struct infoStudent *mem(int m);
 
 void enterStudentsAddress(infoStudent *students, int m);
 
@@ -71,4 +71,3 @@ void cyclePrintStudentsAddress(infoStudent *students, int type, int m);
 void freeMemory(infoStudent *students, int m);
 
 int againProg();
-

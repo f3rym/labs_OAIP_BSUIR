@@ -1,9 +1,0 @@
-type user name price count
-item 1 123 123 123
-item 1 iPhoneX 1000 1
-item 1 iPhoneX 1000 1
-item 1 123 123 1
-item 1 123 123 2
-item 1 iPhoneX 1000 1
-item 1 123 123 3
-item 1 iPhoneX 1000 1

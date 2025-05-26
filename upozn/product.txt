@@ -1,4 +1,0 @@
-product 1 bobr_228 22 1
-product 2 iPhoneX 1000 22
-product 3 123 123 123
-product 4 1 1 1

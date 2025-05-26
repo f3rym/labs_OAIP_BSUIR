@@ -24,10 +24,10 @@ struct Tree *insertNode(Tree *root, int value)
         return newNodeCreate(value);
     else if (value < root->key)
         root->left = insertNode(root->left, value);
-    else if (value > root->key)
+    else if (value >= root->key)
         root->right = insertNode(root->right, value);
     return root;
-};
+}
 
 struct Tree *findMin(Tree *root)
 {
@@ -82,8 +82,6 @@ struct Tree *deleteNode(Tree *root, int value)
     return root;
 }
 
-
-
 void Order1(Tree *root)
 {
     int array[K], index = 0;
@@ -102,11 +100,11 @@ void Order2(Tree *root)
     int array[K], index = 0;
     if (root != NULL)
     {
-        Order2(root->left);
+        Order2(root->right);
         array[index] = root->key;
         printf("%d ", array[index]);
         index++;
-        Order2(root->right);
+        Order2(root->left);
     }
 }
 

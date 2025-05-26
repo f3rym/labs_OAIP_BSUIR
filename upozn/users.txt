@@ -1,4 +1,0 @@
-user ferym 1 100
-user 1 1 100
-user admin admin 100
-user admin admin 100
